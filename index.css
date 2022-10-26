@@ -21,7 +21,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  min-height: 200px;
   padding: 20px;
   background-color: #63e600;
   overflow: hidden;
