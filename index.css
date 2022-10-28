@@ -5,26 +5,27 @@
 }
 
 body {
-  background-color: #0d0d0d;
+  background-image: linear-gradient(45deg, red, black);
+  background-color: #000;
   color: #fff;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 main {
   position: absolute;
+  background-image: linear-gradient(45deg, #4ac1d9, #f38686);
+  overflow-x: hidden;
+  border-radius: 10px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 95%;
-  max-width: 400px;
-  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 200px;
+  min-height: 250px;
   padding: 20px;
-  background-color: #63e600;
-  overflow: hidden;
 }
 
 @keyframes slider {
@@ -36,22 +37,22 @@ main {
   }
 }
 .slider {
-  background-color: #3c8a00;
+  background-color: #fff;
   position: absolute;
   left: 0px;
   top: 0px;
   width: 0px;
   height: 5px;
 }
-.animated{
-    animation-name: slider;
-    animation-duration: 30s;
-    animation-iteration-count: infinite;
-    
+.animated {
+  animation-name: slider;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
 }
 
 .adviceCard {
   text-align-last: center;
+  width: 100%;
 }
 .adviceText {
   line-height: 1.4;
@@ -61,19 +62,41 @@ main {
   margin-bottom: 20px;
   color: aliceblue;
 }
+.btnContainer {
+  position: absolute;
+  bottom: 10px;
+  width: 90%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .btn {
-  padding: 10px 60px;
+  padding: 10px 40px;
   border-radius: 10px;
-  border: 2px solid #4ac1d9;
-  background-color: #4ac1d9;
+  border: 2px solid #000;
+  background-color: #000;
   transition: background 0.5s ease-out;
   color: #fff;
 }
+.likeBtn {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-left: 10px;
+  border: 2px solid rgb(255, 21, 21);
+  background: transparent;
+}
 
-.attribution{
+.attribution {
   position: absolute;
   bottom: 0px;
-  margin-bottom: 90px;
+  margin-bottom: 45px;
   width: 100%;
   text-align: center;
+}
+@media only screen and (min-width: 375px) {
+  .btn {
+    padding: 10px 60px;
+  }
 }
