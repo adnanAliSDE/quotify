@@ -1,7 +1,8 @@
 const textContainer = document.querySelector(".adviceCard .adviceText");
 const authorContainer = document.querySelector(".adviceCard .author");
-const reloadBtn=document.querySelector('.adviceCard .btn');
-const slider=document.querySelector('.slider');
+const reloadBtn = document.querySelector(".adviceCard .nextBtn");
+const pauseBtn = document.querySelector(".adviceCard .pauseBtn");
+const slider = document.querySelector(".slider");
 
 // generating random number
 const random = () => {
@@ -22,17 +23,34 @@ fetch("https://type.fit/api/quotes")
 // Populating the dom
 const populate = () => {
   let quote = quotes[random()];
-  if(quote.author==''){
-    populate();
-  }
-  textContainer.innerHTML =`"${quote.text}"`;
+  textContainer.innerHTML = `"${quote.text}"`;
   authorContainer.innerHTML = quote.author;
-  slider.getAnimations()[0].currentTime=0;
+  slider.getAnimations()[0].currentTime = 0;
 };
 
 // getting new quotes
-reloadBtn.addEventListener('click',populate);
+let delay = 30000; //new quote delay duration
+reloadBtn.addEventListener("click", () => {
+  populate();
+  clearInterval(popInterval);
+  popInterval = setInterval(populate, delay);
+});
 
-setInterval(() => {
-    populate()
-}, 30000);
+const popInterval = setInterval(populate, delay);
+
+// pausing the current quote
+pauseBtn.addEventListener("click", () => {
+  if (
+    slider.style.animationPlayState == "running" ||
+    slider.style.animationPlayState == ""
+  ) {
+    slider.style.animationPlayState = "paused";
+    clearInterval(popInterval);
+  } else {
+    slider.style.animationPlayState = "running";
+    setTimeout(() => {
+      populate();
+      popInterval = setInterval(populate, delay);
+    }, delay - slider.getAnimations()[0].currentTime);
+  }
+});
