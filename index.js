@@ -23,7 +23,7 @@ fetch("https://type.fit/api/quotes")
   });
 
 
-let delay = 5000; //new quote delay duration - 30s
+let delay = 30000; //new quote delay duration - 30s
 
 //Interval to call get change the current quote
 let popInterval; //
