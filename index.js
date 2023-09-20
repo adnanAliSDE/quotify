@@ -1,75 +1,79 @@
+// DOM elements
 const textContainer = document.querySelector(".adviceCard .adviceText");
 const authorContainer = document.querySelector(".adviceCard .author");
-const reloadBtn = document.querySelector(".adviceCard .nextBtn");
+const nextBtn = document.querySelector(".adviceCard .nextBtn"); // Updated identifier
 const pauseBtn = document.querySelector(".adviceCard .pauseBtn");
 const slider = document.querySelector(".slider");
 
-// generating random number
-const random = () => {
-  const num = Math.floor(Math.random() * 10000); // Need to be removed
-  return num;
+// Constants
+const URL = "https://type.fit/api/quotes";
+const DELAY = 30000;
+
+// Variables
+let quotes = [];
+let popInterval;
+let populateAnimationTimer;
+
+// Helper function to get a random integer between min and max (inclusive)
+const getRandomInteger = (min, max) => {
+  if (min > max) {
+    [min, max] = [max, min];
+  }
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-// fetching data
-URL="https://type.fit/api/quotes";
-let quotes;
-fetch(URL)
-  .then(function (response) {
-    return response.json();
-  })
-  .then(function (data) {
+// Fetch quotes from the API
+const fetchQuotes = async () => {
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
     quotes = data;
+    console.log("Data", quotes);
     populate();
-    console.log("API call called populate");
-  });
-
-
-let delay = 30000; //new quote delay duration - 30s
-
-//Interval to call get change the current quote
-let popInterval; //
-let populateAnimationTimer;// timeout to be called when animation is resumed
-
-
-// Populating the dom
-const populate = () => {
-  clearInterval(popInterval)
-  popInterval = setInterval(populate, delay)
-  while (populateAnimationTimer) {
-    populateAnimationTimer = null
-    window.clearTimeout(populateAnimationTimer); // will do nothing if no timeout with id is present
+  } catch (error) {
+    console.error("Error fetching quotes:", error);
   }
-  let quote = quotes[random()];
+};
+
+// Populate the DOM with a new quote
+const populate = () => {
+  clearInterval(popInterval);
+  popInterval = setInterval(populate, DELAY);
+  clearTimeout(populateAnimationTimer);
+
+  const quote = quotes[getRandomInteger(0, quotes.length - 1)];
   textContainer.innerHTML = `"${quote.text}"`;
   authorContainer.innerHTML = quote.author;
-  slider.getAnimations()[0].currentTime = 0;
+
+  // Restart the slider animation
+  slider.style.animation = "none";
+  void slider.offsetWidth; // Trigger reflow
+  slider.style.animation = null;
 };
-// getting next quote
-reloadBtn.addEventListener("click", () => {
-  if (
-    slider.style.animationPlayState == "paused"
-  ) {
+
+// Event listeners
+nextBtn.addEventListener("click", () => {
+  if (slider.style.animationPlayState === "paused") {
     slider.style.animationPlayState = "running";
   }
   populate();
-})
+});
 
-
-// pausing the current quote
 pauseBtn.addEventListener("click", () => {
-  if (
-    slider.style.animationPlayState == "running" ||
-    slider.style.animationPlayState == ""
-  ) {
+  const animationState = slider.style.animationPlayState || "";
+  if (animationState === "running" || animationState === "") {
     slider.style.animationPlayState = "paused";
-    clearInterval(popInterval)
+    clearInterval(popInterval);
   } else {
     slider.style.animationPlayState = "running";
-    console.log("Time left: ", delay - slider.getAnimations()[0].currentTime);
-    // This portion contains bug when populate is called these settimeout and the 
+    const remainingTime = DELAY - (slider.getAnimations()[0].currentTime * 1000);
+    console.log("Time left:", remainingTime);
     populateAnimationTimer = setTimeout(() => {
       populate();
-      console.log("Animation settimeout called populate");
-    }, delay - slider.getAnimations()[0].currentTime);
+      console.log("Animation setTimeout called populate");
+    }, remainingTime);
   }
 });
+
+// Initial fetch of quotes
+fetchQuotes();
