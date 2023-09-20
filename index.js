@@ -6,13 +6,14 @@ const slider = document.querySelector(".slider");
 
 // generating random number
 const random = () => {
-  const temp = Math.floor(Math.random() * 1000 + 643); // Need to be removed
-  return temp;
+  const num = Math.floor(Math.random() * 10000); // Need to be removed
+  return num;
 };
 
 // fetching data
+URL="https://type.fit/api/quotes";
 let quotes;
-fetch("https://type.fit/api/quotes")
+fetch(URL)
   .then(function (response) {
     return response.json();
   })
